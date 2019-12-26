@@ -22,6 +22,7 @@ const typeDefs = gql`
       published: Boolean!
       author: ID!
     ): Post!
+    createComment(text: String!, post: ID!, author: ID!): Comment!
   }
 
   type User {
@@ -108,6 +109,21 @@ const resolvers = {
       const post = { id: uuid4(), title, body, published, author };
       posts.push(post);
       return post;
+    },
+    createComment: (parent, args, ctx, info) => {
+      const { text, post, author } = args;
+      const userExists = users.some(user => user.id === author);
+      const postExists = posts.some(p => p.id === post && p.published);
+      if (!userExists) {
+        throw Error('User does not exist.');
+      }
+      if (!postExists) {
+        throw Error('Post does not exist.');
+      }
+
+      const comment = { id: uuid4(), text, post, author };
+      comments.push(comment);
+      return comment;
     },
   },
   User: {
