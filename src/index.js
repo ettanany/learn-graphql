@@ -1,13 +1,14 @@
 import { GraphQLServer } from 'graphql-yoga';
 import gql from 'graphql-tag';
 
-import { users } from './data';
+import { users, posts } from './data';
 
 // Type definitions (schema)
 const typeDefs = gql`
   type Query {
     me: User!
     users(query: String): [User!]!
+    posts: [Post!]!
     post: Post!
   }
 
@@ -42,6 +43,9 @@ const resolvers = {
       return users.filter(user =>
         user.name.toLowerCase().includes(args.query.toLowerCase()),
       );
+    },
+    posts: (parent, args, ctx, info) => {
+      return posts;
     },
     post: () => ({
       id: '456def',
