@@ -30,18 +30,21 @@ const posts = [
     title: 'Intro to GraphQL',
     body: 'This is a GraphQL intro post...',
     published: true,
+    author: '1',
   },
   {
     id: '101',
     title: 'Advanced GraphQL',
     body: 'This is a post about advanced GraphQL...',
     published: false,
+    author: '1',
   },
   {
     id: '102',
     title: 'Using GraphQL with React',
     body: 'This is a post about using GraphQL with React...',
     published: true,
+    author: '2',
   },
 ];
 
