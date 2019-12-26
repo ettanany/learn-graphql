@@ -52,14 +52,17 @@ const comments = [
   {
     id: '1001',
     text: 'Great intro to GraphQL!',
+    post: '100',
   },
   {
     id: '1002',
     text: 'Thanks for this amazing post!',
+    post: '100',
   },
   {
     id: '1003',
     text: 'Great explanation of using GraphQL with React.',
+    post: '102',
   },
 ];
 
