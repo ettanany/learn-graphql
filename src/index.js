@@ -7,7 +7,7 @@ import { users } from './data';
 const typeDefs = gql`
   type Query {
     me: User!
-    users: [User!]!
+    users(query: String): [User!]!
     post: Post!
   }
 
@@ -36,7 +36,12 @@ const resolvers = {
       age: 26,
     }),
     users: (parent, args, ctx, info) => {
-      return users;
+      if (!args.query) {
+        return users;
+      }
+      return users.filter(user =>
+        user.name.toLowerCase().includes(args.query.toLowerCase()),
+      );
     },
     post: () => ({
       id: '456def',
