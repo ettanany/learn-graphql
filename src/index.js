@@ -40,7 +40,7 @@ const typeDefs = gql`
     id: ID!
     text: String!
     post: Post!
-    user: User!
+    author: User!
   }
 `;
 
@@ -99,7 +99,7 @@ const resolvers = {
       return posts.filter(post => post.author === parent.id);
     },
     comments: (parent, args, ctx, info) => {
-      return comments.filter(comment => comment.user === parent.id);
+      return comments.filter(comment => comment.author === parent.id);
     },
   },
   Post: {
@@ -114,8 +114,8 @@ const resolvers = {
     post: (parent, args, ctx, info) => {
       return posts.find(post => post.id === parent.post);
     },
-    user: (parent, args, ctx, info) => {
-      return users.find(user => user.id === parent.user);
+    author: (parent, args, ctx, info) => {
+      return users.find(user => user.id === parent.author);
     },
   },
 };
