@@ -16,6 +16,12 @@ const typeDefs = gql`
 
   type Mutation {
     createUser(name: String!, email: String!, age: Int): User!
+    createPost(
+      title: String!
+      body: String!
+      published: Boolean!
+      author: ID!
+    ): Post!
   }
 
   type User {
@@ -92,6 +98,16 @@ const resolvers = {
       const user = { id: uuid4(), name, email, age };
       users.push(user);
       return user;
+    },
+    createPost: (parent, args, ctx, info) => {
+      const { title, body, published, author } = args;
+      const userExists = users.some(user => user.id === author);
+      if (!userExists) {
+        throw Error('User does not exist.');
+      }
+      const post = { id: uuid4(), title, body, published, author };
+      posts.push(post);
+      return post;
     },
   },
   User: {
