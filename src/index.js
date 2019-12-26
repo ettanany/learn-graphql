@@ -1,10 +1,13 @@
 import { GraphQLServer } from 'graphql-yoga';
 import gql from 'graphql-tag';
 
+import { users } from './data';
+
 // Type definitions (schema)
 const typeDefs = gql`
   type Query {
     me: User!
+    users: [User!]!
     post: Post!
   }
 
@@ -32,6 +35,9 @@ const resolvers = {
       email: 'john@example.com',
       age: 26,
     }),
+    users: (parent, args, ctx, info) => {
+      return users;
+    },
     post: () => ({
       id: '456def',
       title: 'GraphQL Intro',
