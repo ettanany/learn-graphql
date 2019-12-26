@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 const typeDefs = gql`
   type Query {
     me: User!
+    post: Post!
   }
 
   type User {
@@ -12,6 +13,13 @@ const typeDefs = gql`
     name: String!
     email: String!
     age: Int
+  }
+
+  type Post {
+    id: ID!
+    title: String!
+    body: String!
+    published: Boolean!
   }
 `;
 
@@ -23,6 +31,12 @@ const resolvers = {
       name: 'John',
       email: 'john@example.com',
       age: 26,
+    }),
+    post: () => ({
+      id: '456def',
+      title: 'GraphQL Intro',
+      body: '',
+      published: false,
     }),
   },
 };
