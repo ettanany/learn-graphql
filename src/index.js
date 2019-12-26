@@ -1,5 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga';
 import gql from 'graphql-tag';
+import uuid4 from 'uuid/v4';
 
 import { users, posts, comments } from './data';
 
@@ -11,6 +12,10 @@ const typeDefs = gql`
     posts(query: String): [Post!]!
     comments: [Comment!]
     post: Post!
+  }
+
+  type Mutation {
+    createUser(name: String!, email: String!, age: Int): User!
   }
 
   type User {
@@ -76,6 +81,18 @@ const resolvers = {
       body: '',
       published: false,
     }),
+  },
+  Mutation: {
+    createUser: (parent, args, ctx, info) => {
+      const { name, email, age } = args;
+      const exists = users.some(user => user.email === email);
+      if (exists) {
+        throw Error('Email already exists.');
+      }
+      const user = { id: uuid4(), name, email, age };
+      users.push(user);
+      return user;
+    },
   },
   User: {
     posts: (parent, args, ctx, info) => {
