@@ -8,7 +8,7 @@ const typeDefs = gql`
   type Query {
     me: User!
     users(query: String): [User!]!
-    posts: [Post!]!
+    posts(query: String): [Post!]!
     post: Post!
   }
 
@@ -45,7 +45,15 @@ const resolvers = {
       );
     },
     posts: (parent, args, ctx, info) => {
-      return posts;
+      const query = args.query && args.query.toLowerCase();
+      if (!query) {
+        return posts;
+      }
+      return posts.filter(
+        post =>
+          post.title.toLowerCase().includes(query) ||
+          post.body.toLowerCase().includes(query),
+      );
     },
     post: () => ({
       id: '456def',
