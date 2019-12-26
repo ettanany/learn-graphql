@@ -45,4 +45,19 @@ const posts = [
   },
 ];
 
-export { users, posts };
+const comments = [
+  {
+    id: '1001',
+    text: 'Great intro to GraphQL!',
+  },
+  {
+    id: '1002',
+    text: 'Thanks for this amazing post!',
+  },
+  {
+    id: '1003',
+    text: 'Great explanation of using GraphQL with React.',
+  },
+];
+
+export { users, posts, comments };

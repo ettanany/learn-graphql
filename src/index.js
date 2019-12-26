@@ -1,7 +1,7 @@
 import { GraphQLServer } from 'graphql-yoga';
 import gql from 'graphql-tag';
 
-import { users, posts } from './data';
+import { users, posts, comments } from './data';
 
 // Type definitions (schema)
 const typeDefs = gql`
@@ -9,6 +9,7 @@ const typeDefs = gql`
     me: User!
     users(query: String): [User!]!
     posts(query: String): [Post!]!
+    comments: [Comment!]
     post: Post!
   }
 
@@ -24,6 +25,11 @@ const typeDefs = gql`
     title: String!
     body: String!
     published: Boolean!
+  }
+
+  type Comment {
+    id: ID!
+    text: String!
   }
 `;
 
@@ -54,6 +60,9 @@ const resolvers = {
           post.title.toLowerCase().includes(query) ||
           post.body.toLowerCase().includes(query),
       );
+    },
+    comments: (parent, args, ctx, info) => {
+      return comments;
     },
     post: () => ({
       id: '456def',
