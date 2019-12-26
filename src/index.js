@@ -19,6 +19,7 @@ const typeDefs = gql`
     email: String!
     age: Int
     posts: [Post!]!
+    comments: [Comment!]!
   }
 
   type Post {
@@ -34,6 +35,7 @@ const typeDefs = gql`
     id: ID!
     text: String!
     post: Post!
+    user: User!
   }
 `;
 
@@ -79,6 +81,9 @@ const resolvers = {
     posts: (parent, args, ctx, info) => {
       return posts.filter(post => post.author === parent.id);
     },
+    comments: (parent, args, ctx, info) => {
+      return comments.filter(comment => comment.user === parent.id);
+    },
   },
   Post: {
     author: (parent, args, ctx, info) => {
@@ -91,6 +96,9 @@ const resolvers = {
   Comment: {
     post: (parent, args, ctx, info) => {
       return posts.find(post => post.id === parent.post);
+    },
+    user: (parent, args, ctx, info) => {
+      return users.find(user => user.id === parent.user);
     },
   },
 };
