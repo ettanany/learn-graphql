@@ -91,6 +91,7 @@ const typeDefs = gql`
 
   type Mutation {
     createUser(data: CreateUserInput!): User!
+    deleteUser(id: ID!): User!
     createPost(data: CreatePostInput!): Post!
     createComment(data: CreateCommentInput!): Comment!
   }
@@ -187,6 +188,24 @@ const resolvers = {
       const user = { id: uuid4(), ...args.data };
       users.push(user);
       return user;
+    },
+    deleteUser: (parent, args, ctx, info) => {
+      const userIndex = users.findIndex(user => user.id === args.id);
+      if (userIndex === -1) {
+        throw Error('User does not exist.');
+      }
+      const deletedUsers = users.splice(userIndex, 1);
+
+      // delete user's posts and their associated comments
+      posts = posts.filter(post => post.author !== args.id);
+      for (let post of posts) {
+        comments = comments.filter(comment => comment.post === post.id);
+      }
+
+      // delete user's comments
+      comments = comments.filter(comment => comment.author !== args.id);
+
+      return deletedUsers[0];
     },
     createPost: (parent, args, ctx, info) => {
       const userExists = users.some(user => user.id === args.data.author);
