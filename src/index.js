@@ -91,29 +91,26 @@ const resolvers = {
   },
   Mutation: {
     createUser: (parent, args, ctx, info) => {
-      const { name, email, age } = args;
-      const exists = users.some(user => user.email === email);
+      const exists = users.some(user => user.email === args.email);
       if (exists) {
         throw Error('Email already exists.');
       }
-      const user = { id: uuid4(), name, email, age };
+      const user = { id: uuid4(), ...args };
       users.push(user);
       return user;
     },
     createPost: (parent, args, ctx, info) => {
-      const { title, body, published, author } = args;
-      const userExists = users.some(user => user.id === author);
+      const userExists = users.some(user => user.id === args.author);
       if (!userExists) {
         throw Error('User does not exist.');
       }
-      const post = { id: uuid4(), title, body, published, author };
+      const post = { id: uuid4(), ...args };
       posts.push(post);
       return post;
     },
     createComment: (parent, args, ctx, info) => {
-      const { text, post, author } = args;
-      const userExists = users.some(user => user.id === author);
-      const postExists = posts.some(p => p.id === post && p.published);
+      const userExists = users.some(user => user.id === args.author);
+      const postExists = posts.some(p => p.id === args.post && p.published);
       if (!userExists) {
         throw Error('User does not exist.');
       }
@@ -121,7 +118,7 @@ const resolvers = {
         throw Error('Post does not exist.');
       }
 
-      const comment = { id: uuid4(), text, post, author };
+      const comment = { id: uuid4(), ...args };
       comments.push(comment);
       return comment;
     },
