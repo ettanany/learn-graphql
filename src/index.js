@@ -95,6 +95,7 @@ const typeDefs = gql`
     createPost(data: CreatePostInput!): Post!
     deletePost(id: ID!): Post!
     createComment(data: CreateCommentInput!): Comment!
+    deleteComment(id: ID!): Comment!
   }
 
   type User {
@@ -244,6 +245,16 @@ const resolvers = {
       const comment = { id: uuid4(), ...args.data };
       comments.push(comment);
       return comment;
+    },
+    deleteComment: (parent, args, ctx, info) => {
+      const commentIndex = comments.findIndex(
+        comment => comment.id === args.id,
+      );
+      if (commentIndex === -1) {
+        throw Error('Comment does not exist.');
+      }
+      const deletedComments = comments.splice(commentIndex, 1);
+      return deletedComments[0];
     },
   },
   User: {
