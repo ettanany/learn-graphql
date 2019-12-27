@@ -15,14 +15,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createUser(name: String!, email: String!, age: Int): User!
-    createPost(
-      title: String!
-      body: String!
-      published: Boolean!
-      author: ID!
-    ): Post!
-    createComment(text: String!, post: ID!, author: ID!): Comment!
+    createUser(data: CreateUserInput!): User!
+    createPost(data: CreatePostInput!): Post!
+    createComment(data: CreateCommentInput!): Comment!
   }
 
   type User {
@@ -48,6 +43,25 @@ const typeDefs = gql`
     text: String!
     post: Post!
     author: User!
+  }
+
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
+  }
+
+  input CreatePostInput {
+    title: String!
+    body: String!
+    published: Boolean!
+    author: ID!
+  }
+
+  input CreateCommentInput {
+    text: String!
+    post: ID!
+    author: ID!
   }
 `;
 
@@ -91,26 +105,28 @@ const resolvers = {
   },
   Mutation: {
     createUser: (parent, args, ctx, info) => {
-      const exists = users.some(user => user.email === args.email);
+      const exists = users.some(user => user.email === args.data.email);
       if (exists) {
         throw Error('Email already exists.');
       }
-      const user = { id: uuid4(), ...args };
+      const user = { id: uuid4(), ...args.data };
       users.push(user);
       return user;
     },
     createPost: (parent, args, ctx, info) => {
-      const userExists = users.some(user => user.id === args.author);
+      const userExists = users.some(user => user.id === args.data.author);
       if (!userExists) {
         throw Error('User does not exist.');
       }
-      const post = { id: uuid4(), ...args };
+      const post = { id: uuid4(), ...args.data };
       posts.push(post);
       return post;
     },
     createComment: (parent, args, ctx, info) => {
-      const userExists = users.some(user => user.id === args.author);
-      const postExists = posts.some(p => p.id === args.post && p.published);
+      const userExists = users.some(user => user.id === args.data.author);
+      const postExists = posts.some(
+        p => p.id === args.data.post && p.published,
+      );
       if (!userExists) {
         throw Error('User does not exist.');
       }
@@ -118,7 +134,7 @@ const resolvers = {
         throw Error('Post does not exist.');
       }
 
-      const comment = { id: uuid4(), ...args };
+      const comment = { id: uuid4(), ...args.data };
       comments.push(comment);
       return comment;
     },
