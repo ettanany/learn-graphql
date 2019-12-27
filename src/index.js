@@ -2,7 +2,82 @@ import { GraphQLServer } from 'graphql-yoga';
 import gql from 'graphql-tag';
 import uuid4 from 'uuid/v4';
 
-import { users, posts, comments } from './data';
+let users = [
+  {
+    id: '1',
+    name: 'John',
+    email: 'john@example.com',
+    age: 26,
+  },
+  {
+    id: '2',
+    name: 'Jane',
+    email: 'jane@example.com',
+    age: 22,
+  },
+  {
+    id: '3',
+    name: 'Johnny',
+    email: 'johnny@example.com',
+  },
+  {
+    id: '4',
+    name: 'Jannie',
+    email: 'jannie@example.com',
+    age: 14,
+  },
+];
+
+let posts = [
+  {
+    id: '100',
+    title: 'Intro to GraphQL',
+    body: 'This is a GraphQL intro post...',
+    published: true,
+    author: '1',
+  },
+  {
+    id: '101',
+    title: 'Advanced GraphQL',
+    body: 'This is a post about advanced GraphQL...',
+    published: false,
+    author: '1',
+  },
+  {
+    id: '102',
+    title: 'Using GraphQL with React',
+    body: 'This is a post about using GraphQL with React...',
+    published: true,
+    author: '2',
+  },
+];
+
+let comments = [
+  {
+    id: '1001',
+    text: 'Great intro to GraphQL!',
+    author: '3',
+    post: '100',
+  },
+  {
+    id: '1002',
+    text: 'Thanks for this amazing post!',
+    author: '4',
+    post: '100',
+  },
+  {
+    id: '1003',
+    text: 'Great explanation of using GraphQL with React.',
+    author: '1',
+    post: '102',
+  },
+  {
+    id: '1004',
+    text: 'Great explanation of using GraphQL with React.',
+    author: '2',
+    post: '102',
+  },
+];
 
 // Type definitions (schema)
 const typeDefs = gql`
