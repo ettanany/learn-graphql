@@ -78,6 +78,31 @@ const Mutation = {
 
     return deletedPosts[0];
   },
+  updatePost: (parent, args, { db }, info) => {
+    const {
+      id,
+      data: { title, body, published },
+    } = args;
+
+    const post = db.posts.find(post => post.id === id);
+    if (!post) {
+      throw Error('Post does not exist.');
+    }
+
+    if (typeof title === 'string') {
+      post.title = title;
+    }
+
+    if (typeof body === 'string') {
+      post.body = body;
+    }
+
+    if (typeof published === 'boolean') {
+      post.published = published;
+    }
+
+    return post;
+  },
   createComment: (parent, args, { db }, info) => {
     const userExists = db.users.some(user => user.id === args.data.author);
     const postExists = db.posts.some(
