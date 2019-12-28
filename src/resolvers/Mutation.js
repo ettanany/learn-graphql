@@ -28,6 +28,35 @@ const Mutation = {
 
     return deletedUsers[0];
   },
+  updateUser: (parent, args, { db }, info) => {
+    const {
+      id,
+      data: { email, name, age },
+    } = args;
+
+    const user = db.users.find(user => user.id === id);
+    if (!user) {
+      throw Error('User does not exist.');
+    }
+
+    if (typeof email === 'string') {
+      const emailExists = db.users.some(user => user.email === email);
+      if (emailExists) {
+        throw Error('Email already exists.');
+      }
+      user.email = email;
+    }
+
+    if (typeof name === 'string') {
+      user.name = name;
+    }
+
+    if (typeof age !== 'undefined') {
+      user.age = age;
+    }
+
+    return user;
+  },
   createPost: (parent, args, { db }, info) => {
     const userExists = db.users.some(user => user.id === args.data.author);
     if (!userExists) {
